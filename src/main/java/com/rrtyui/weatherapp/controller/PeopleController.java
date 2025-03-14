@@ -1,7 +1,11 @@
 package com.rrtyui.weatherapp.controller;
 
 import com.rrtyui.weatherapp.dao.PersonDao;
+import com.rrtyui.weatherapp.model.Cart;
 import com.rrtyui.weatherapp.model.Person;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,15 +18,48 @@ import org.springframework.web.bind.annotation.*;
 public class PeopleController {
 
     private final PersonDao personDao;
+    private final HttpServletRequest httpServletRequest;
 
     @Autowired
-    public PeopleController(PersonDao personDao) {
+    public PeopleController(PersonDao personDao, HttpServletRequest httpServletRequest) {
         this.personDao = personDao;
+        this.httpServletRequest = httpServletRequest;
     }
 
     @GetMapping()
     public String index(Model model) {
+        HttpSession session = httpServletRequest.getSession();
+
+        String user = (String) session.getAttribute("current_user");
+
+        if (user == null) {
+            // response для нового пользователя
+            // авторизация
+             // регистрация
+             // session.setAttribute("current_user", ID);
+        } else {
+            // response для авторизованного пользователя
+        }
+
+
+//        String name = httpServletRequest.getParameter("name");
+//        int quantity = Integer.parseInt(httpServletRequest.getParameter("quantity"));
+//
+//        Cart cart = (Cart)session.getAttribute("cart");
+//
+//        if (cart == null) {
+//            cart = new Cart();
+//
+//            cart.setName(name);
+//            cart.setQuantity(quantity);
+//        }
+//
+//        session.setAttribute("cart", cart);
+
+
         model.addAttribute("people", personDao.index());
+        model.addAttribute("cart", cart);
+
         return "people/index";
     }
 
